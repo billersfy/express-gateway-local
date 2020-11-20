@@ -1,0 +1,66 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  security:
+    host: localhost
+    paths: '/v1/auth/*'
+  customers:
+    host: localhost
+    paths: '/v1/customers/*'
+  products:
+    host: localhost
+    paths: 'v1/products/*'
+serviceEndpoints:
+  securityService:
+    url: 'http://localhost:9089'
+  customersService:
+    url: 'http://localhost:9098'
+  productsService:
+    url: 'http://localhost:9097'
+pipelines:
+  securityPipeline:
+    apiEndpoints:
+      - security
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: 'HEAD, GET, PUT, POST, PATCH, DELETE'
+              Access-Control-Allow-Headers: true
+      - proxy:
+          - action:
+              serviceEndpoint: securityService
+              changeOrigin: true
+  customersPipeline:
+    apiEndpoints:
+      - customers
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: 'HEAD, GET, PUT, POST, PATCH, DELETE'
+              Access-Control-Allow-Headers: true
+      - proxy:
+          - action:
+              serviceEndpoint: customersService
+              changeOrigin: true
+  productsPipeline:
+    apiEndpoints:
+      - products
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: 'HEAD, GET, PUT, POST, PATCH, DELETE'
+              Access-Control-Allow-Headers: true
+      - proxy:
+          - action:
+              serviceEndpoint: productsService
+              changeOrigin: true
+policies:
+  - cors
+  - proxy
+
