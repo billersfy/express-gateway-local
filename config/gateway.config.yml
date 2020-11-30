@@ -7,19 +7,49 @@ apiEndpoints:
   security:
     host: localhost
     paths: '/v1/auth/*'
-  customers:
+  accounts:
     host: localhost
-    paths: '/v1/customers/*'
+    paths: 'v1/accounts/*'
   products:
     host: localhost
     paths: 'v1/products/*'
+  invoiceCustomers:
+    host: localhost
+    paths: '/v1/customers/invoice/*'
+  paymentsCore:
+    host: localhost
+    paths: '/v1/payments/*'
+  checkouts:
+    host: localhost
+    paths: '/v1/checkouts/*'
+  cybersource:
+    host: localhost
+    paths: '/v1/cybersource/*'
+  tokenizer:
+    host: localhost
+    paths: '/v1/tokenizer/*'
+  paymentCustomers:
+    host: localhost
+    paths: '/v1/customers/payment/*'
 serviceEndpoints:
   securityService:
     url: 'http://localhost:9089'
-  customersService:
-    url: 'http://localhost:9098'
+  accountsService:
+    url: 'http://localhost:9096'
   productsService:
     url: 'http://localhost:9097'
+  invoiceCustomersService:
+    url: 'http://localhost:9098'
+  paymentsCoreService:
+    url: 'http://localhost:9095'
+  checkoutsService:
+    url: 'http://localhost:9099'
+  cybersourceService:
+    url: 'http://localhost:9093'
+  tokenizerService:
+    url: 'http://localhost:9094'
+  paymentCustomersService:
+    url: 'http://localhost:9086'
 pipelines:
   securityPipeline:
     apiEndpoints:
@@ -34,9 +64,9 @@ pipelines:
           - action:
               serviceEndpoint: securityService
               changeOrigin: true
-  customersPipeline:
+  accountsPipeline:
     apiEndpoints:
-      - customers
+      - accounts
     policies:
       - cors:
           - action:
@@ -45,7 +75,7 @@ pipelines:
               Access-Control-Allow-Headers: true
       - proxy:
           - action:
-              serviceEndpoint: customersService
+              serviceEndpoint: accountsService
               changeOrigin: true
   productsPipeline:
     apiEndpoints:
@@ -59,6 +89,84 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: productsService
+              changeOrigin: true
+  invoiceCustomersPipeline:
+    apiEndpoints:
+      - invoiceCustomers
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: 'HEAD, GET, PUT, POST, PATCH, DELETE'
+              Access-Control-Allow-Headers: true
+      - proxy:
+          - action:
+              serviceEndpoint: invoiceCustomersService
+              changeOrigin: true
+  paymentsCorePipeline:
+    apiEndpoints:
+      - paymentsCoreService
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: 'POST'
+              Access-Control-Allow-Headers: true
+      - proxy:
+          - action:
+              serviceEndpoint: paymentsCoreService
+              changeOrigin: true
+  checkoutsPipeline:
+    apiEndpoints:
+      - checkoutsService
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: 'HEAD, GET, PUT, POST, PATCH, DELETE'
+              Access-Control-Allow-Headers: true
+      - proxy:
+          - action:
+              serviceEndpoint: checkoutsService
+              changeOrigin: true
+  cybersourcePipeline:
+    apiEndpoints:
+      - cybersourceService
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: 'POST, GET'
+              Access-Control-Allow-Headers: true
+      - proxy:
+          - action:
+              serviceEndpoint: cybersourceService
+              changeOrigin: true
+  tokenizerPipeline:
+    apiEndpoints:
+      - tokenizerService
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: 'POST'
+              Access-Control-Allow-Headers: true
+      - proxy:
+          - action:
+              serviceEndpoint: tokenizerService
+              changeOrigin: true
+  paymentCustomersPipeline:
+    apiEndpoints:
+      - paymentCustomersService
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: HEAD, GET, PUT, POST, PATCH, DELETE'
+              Access-Control-Allow-Headers: true
+      - proxy:
+          - action:
+              serviceEndpoint: paymentCustomersService
               changeOrigin: true
 policies:
   - cors
